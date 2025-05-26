@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Animaciones</title>
+<link rel="stylesheet" href="estilos.css" />
+</head>
+<body>
+<div id="cabecera">
+<h1>Javascript</h1>
+</div>
+<div id="menu">
+<a href="index.html" class="item_menu">Inicio</a>
+<a href="eventos.html" class="item_menu">eventos</a>
+<a href="css.html" class="item_menu">css</a>
+<a href="form.html" class="item_menu">form</a>
+<a href="funciones.html" class="item_menu">funciones</a>
+<a href="location.html" class="item_menu">location</a>
+<a href="windows.html" class="item_menu">windows</a>
+<a href="DOM.html" class="item_menu">DOM</a>
+<a href="Animaciones.html" class="item_menu item_activo">Animaciones</a>
+<a href="Juego.html" class="item_menu">Juego</a>
+<br>
+</div>
+<div class="opciones">
+<button onclick="iniciarMatrix()">Efecto Matrix</button>
+<button onclick="iniciarParticulas()">Efecto Particulas</button>
+</div>
+<div id="animacion-container" style="width:100%; height:700px; border:1px solid #0e0d0d;"></div>
+<script>
+const contenedor = document.getElementById('animacion-container');
+
+function limpiarAnimacion() {
+    contenedor.innerHTML = '';
+}
+
+function iniciarMatrix() {
+    limpiarAnimacion();
+    const canvas = document.createElement('canvas');
+    canvas.width = contenedor.clientWidth;
+    canvas.height = contenedor.clientHeight;
+    contenedor.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+
+    const letras = "ΑΒΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩ1234567890!@#$%^&*".split("");
+    const fuente = 12;
+    const columnas = Math.floor(canvas.width / fuente);
+    const lluvia = new Array(columnas).fill(1);
+
+    function dibujar() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#0F0';
+        ctx.font = fuente + 'px monospace';
+
+        for (let i = 0; i < lluvia.length; i++) {
+            const letra = letras[Math.floor(Math.random() * letras.length)];
+            ctx.fillText(letra, i * fuente, lluvia[i] * fuente);
+            if (lluvia[i] * fuente > canvas.height && Math.random() > 0.975) {
+                lluvia[i] = 0;
+            }
+            lluvia[i]++;
+        }
+    }
+    setInterval(dibujar, 50);
+}
+
+function iniciarParticulas() {
+    limpiarAnimacion();
+    const canvas = document.createElement('canvas');
+    canvas.width = contenedor.clientWidth;
+    canvas.height = contenedor.clientHeight;
+    contenedor.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+
+    let particulas = [];
+
+    canvas.addEventListener('mousemove', e => {
+        for (let i = 0; i < 5; i++) {
+            particulas.push({
+                x: e.offsetX,
+                y: e.offsetY,
+                vx: (Math.random() - 0.5) * 4,
+                vy: (Math.random() - 0.5) * 4,
+                size: Math.random() * 4 + 1,
+                alpha: 1
+            });
+        }
+    });
+
+    function dibujar() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particulas.forEach(p => {
+            ctx.fillStyle = `rgba(255, 165, 0, ${p.alpha})`;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+
+            p.x += p.vx;
+            p.y += p.vy;
+            p.alpha -= 0.02;
+            p.size *= 0.98;
+        });
+        particulas = particulas.filter(p => p.alpha > 0 && p.size > 0);
+        requestAnimationFrame(dibujar);
+    }
+    dibujar();
+}
+</script>
+</body>
+</html>
