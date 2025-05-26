@@ -26,7 +26,15 @@
     
         <br>
  </div>
-<br>        
-      <p>https://limbertuwu.github.io/JavaScript/</p>
+<div id="demo"></div>
+
+    <script>
+        document.getElementById("demo").innerHTML = "location is" + location.href + "<br>";
+
+        document.getElementById("demo").innerHTML += "hostname is" + location.hostname + "<br>";
+
+        document.getElementById("demo").innerHTML += "path is" + location.pathname + "<br>";
+        
+    </script>
 </body>
 </html>
